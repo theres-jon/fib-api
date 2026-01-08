@@ -25,6 +25,9 @@ ENV PATH="/app/.venv/bin:${PATH}"
 COPY --from=builder /app/app ./app
 COPY --from=builder /app/.venv /app/.venv
 
+RUN adduser --disabled-password appuser
+USER appuser
+
 # Since the port is exposed via the app
 # at runtime we will avoid exposing it
 # as part of hte docker manifest. As such

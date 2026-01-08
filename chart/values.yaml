@@ -9,7 +9,7 @@ image:
   #
   repository: jonryan/fib-api
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 replicaCount: 2
 

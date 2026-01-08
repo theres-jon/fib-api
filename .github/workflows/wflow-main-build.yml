@@ -1,0 +1,22 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  python-checks:
+    uses: ./.github/workflows/action-python-checks.yaml
+
+  docker-build:
+    needs: python-checks
+    uses: ./.github/workflows/action-docker-build.yaml
+    secrets: inherit
+    with:
+      working-dir: ./python
+      docker-registry: jonryan/fib-api
+    
+
+  helm-deploy:
+    needs: docker-build
+    uses: ./.github/workflows/action-helm-deploy.yaml

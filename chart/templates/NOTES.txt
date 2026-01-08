@@ -1,0 +1,7 @@
+Query for Fibonacci numbers using the following commands:
+
+kubectl port-forward service/fib-api-fibonacci 8000:8000
+
+curl http://localhost:8000/\?n\=15
+-or- load in browser 
+http://localhost:8000/?n=15

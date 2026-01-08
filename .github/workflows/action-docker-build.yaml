@@ -1,0 +1,44 @@
+on:
+  workflow_call:
+    inputs:
+      working-dir:
+        required: true
+        type: string
+        description: 'The relative path within this repo that contains the Dockerfile for building'
+      docker-registry:
+        required: true
+        type: string
+        description: 'The URL of the registry to push the image artifact'
+    outputs:
+      imagetag:
+        description: "The Docker build image ID to be used downstream"
+        value: ${{ jobs.docker-build-push.outputs.imagetag }}
+jobs:
+  docker-build-push:
+    runs-on: ubuntu-latest
+
+    outputs:
+      imagetag: ${{ steps.set-image-tag-output.outputs.imagetag }}
+
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.git-ref }}
+          fetch-depth: 0
+
+      - name: Get Docker Tag
+        run: |
+          CURRENT_SHA=$(git rev-parse HEAD)
+          echo "DOCKER_TAG=${{inputs.docker-tag-prefix}}$CURRENT_SHA" >> $GITHUB_ENV
+
+      - name: Build and Push Image with Docker
+        run:  |
+           docker build ${{inputs.working-dir}} -t ${{ inputs.docker-registry }}:${{ env.DOCKER_TAG }}
+           
+           # In here we would have a docker push depending on how we auth to the registry
+           # docker push ${{ inputs.docker-registry }}:${{ env.DOCKER_TAG }}
+
+      - name: Output Docker Tag
+        id: set-image-tag-output
+        run: echo "imagetag=${{ env.DOCKER_TAG }}" >> $GITHUB_OUTPUT

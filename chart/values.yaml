@@ -1,0 +1,47 @@
+image:
+  # Using a personally hosted registry in Docker Hub.
+  # In a production environment we'd obviously use 
+  # a protected repo with a cloud backed instance. 
+  # Ideally ECR in AWS for example. In this case a local
+  # repo can also be used if loading into minikube.
+  #
+  #minikube image load fib-api:latest
+  #
+  repository: jonryan/fib-api
+  tag: latest
+  pullPolicy: IfNotPresent
+
+replicaCount: 2
+
+service:
+  type: ClusterIP
+  port: 8000
+
+resources:
+  requests:
+    cpu: "250m"
+    memory: "128Mi"
+  limits:
+    cpu: "500m"
+    memory: "256Mi"
+
+ingress:
+  # I'm leaving this disabled as to not create a LB for someone
+  # that would be testing the Helm chart :)
+  enabled: false
+  className: nginx
+  # Load balancer certificates, etc, would be defined here. 
+  annotations: {}
+  hosts:
+    - host: fibonacci.local
+      paths:
+        - path: /
+          pathType: Prefix
+
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70
+

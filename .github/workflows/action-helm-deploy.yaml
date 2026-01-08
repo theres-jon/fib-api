@@ -1,0 +1,23 @@
+name: Helm Deploy (Stub)
+
+on:
+  workflow_call:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./chart
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Helm lint
+        run: |
+          helm lint .
+
+      - name: Helm template (dry-run)
+        run: |
+          helm template fib-api .

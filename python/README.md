@@ -3,24 +3,13 @@
 This project is a simple HTTP service that generates Fibonacci numbers based on user input.  
 It is structured as a small, production-ready service with clear separation of concerns, structured logging, automated formatting, and basic test coverage.
 
-If installing with Helm and Minikube - please use the following
-```
-# Perform the docker build with the right Image Tag
-docker build -f python/Dockerfile ./python -t fib-api:latest
-
-minikube image load fib-api:latest
-
-helm install fib-api ./chart
-```
-
 ## Requirements
 
 - Python 3.10+
 - Poetry
 
 ---
-
-## Project Structure
+## Getting Started
 
 ```
 app/        Application code (HTTP server, business logic, logging)
@@ -28,24 +17,15 @@ tests/      Unit tests
 ```
 
 
-## Build & Install
-
 For local development
 
-From the `python/` directory: `make install`
-
-For local container builds: `make docker-build`
+From the `python/` directory: 
+- `make install` (or) `make docker-build`
 
 This creates a virtual environment and installs all runtime and development dependencies.
 
-
-## Run the Application
-
-For local development
-
-From the `python/` director: `make run`
-
-For local container runs: `make docker-run`
+From the `python/` directory:
+- `make run` (or) `make docker-run`
 
 The server will start on port 8000 by default.
 
@@ -54,30 +34,20 @@ The server will start on port 8000 by default.
 SERVER_PORT  Port to bind the server (default: 8000)  
 LOG_LEVEL    Log verbosity (default: INFO)
 
-Example:
+These can be added simply with putting them inline:
+- `LOG_LEVEL=DEBUG SERVER_PORT=8080 make run`
 
-`LOG_LEVEL=DEBUG SERVER_PORT=8000 make run`
+Additionally we cap the max fibs that can be generated with
+`MAX_FIBS`.
 
-## API Usage
-
-### Health Check
-
-Request:
-
-GET /
-
-Response:
-
-200 OK  
-OK
+In an ideal world these would be set based on CPU/Memory of the host. 
 
 ---
-
 ### Fibonacci Endpoint
 
 Request:
 
-GET /fibonacci?n=10
+GET /?n=10
 
 Response:
 
@@ -97,7 +67,6 @@ make run       Start the server
 make build     Build the package
 
 ---
-
 ## Testing
 
 From the Python directory
@@ -106,3 +75,16 @@ From the Python directory
 make install
 make test
 ```
+
+## Deploying
+If installing with Helm and Minikube - please use the following
+```
+# Perform the docker build with the right Image Tag
+docker build -f python/Dockerfile ./python -t fib-api:latest
+
+minikube image load fib-api:latest
+
+helm install fib-api ./chart
+```
+
+The primary consideration here is where the image is stored. Right now the chart serves it from a public Docker Hub registry. This is not recommended for production.

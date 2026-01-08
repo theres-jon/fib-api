@@ -7,7 +7,6 @@ from app.logging import logger
 
 SERVER_PORT = os.getenv("SERVER_PORT", "8000")
 FIB_MAX = os.getenv("MAX_FIB", "100000")
-
 FIB_MAX_INT = int(FIB_MAX)
 
 

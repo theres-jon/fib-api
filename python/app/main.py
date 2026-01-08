@@ -32,7 +32,7 @@ class GetFibs(BaseHTTPRequestHandler):
         except (IndexError, ValueError):
             return self.respond(422, "'n' must be an integer")
 
-        if n < 0 or n > int(FIB_MAX_INT):
+        if n < 0 or n > FIB_MAX_INT:
             return self.respond(
                 422,
                 f"'n' must be between 0 and {FIB_MAX_INT}"
